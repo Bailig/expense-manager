@@ -1,31 +1,36 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import { createStore, compose, applyMiddleware } from 'redux';
-import logger from 'redux-logger';
-import thunk from 'redux-thunk';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Row, Col } from 'react-bootstrap';
 
-import reducers from '../modules';
+import { onTransactionChange } from '../modules/transaction';
 import Header from './Header';
-
-const store = createStore(
-  reducers,
-  {},
-  compose(applyMiddleware(thunk, logger)),
-);
+import AllAccountSummary from './AllAccountSummary';
 
 class App extends Component {
   componentWillMount() {
-
+    this.props.onTransactionChange();
   }
   render() {
     return (
-      <Provider store={store}>
-        <div className="App">
-          <Header />
+      <div className="App">
+        <Header />
+        <div className="container">
+          <Row>
+            <Col md={3} />
+
+            <Col md={9}>
+              <AllAccountSummary />
+            </Col>
+          </Row>
         </div>
-      </Provider>
+      </div>
     );
   }
 }
 
-export default App;
+App.propTypes = {
+  onTransactionChange: PropTypes.func.isRequired,
+};
+
+export default connect(null, { onTransactionChange })(App);
