@@ -5,7 +5,9 @@ import { Row, Col } from 'react-bootstrap';
 
 import { onTransactionChange } from '../modules/transaction';
 import Header from './Header';
-import AllAccountSummary from './AllAccountSummary';
+import AllAccountSummary from './AccountSummary/AllAccountSummary';
+import FilteringForm from './FilteringForm/FilteringForm';
+import AccountTabs from './AccountTabs/AccountTabs';
 
 class App extends Component {
   componentWillMount() {
@@ -17,10 +19,12 @@ class App extends Component {
         <Header />
         <div className="container">
           <Row>
-            <Col md={3} />
-
+            <Col md={3} >
+              <FilteringForm />
+            </Col>
             <Col md={9}>
               <AllAccountSummary />
+              <AccountTabs />
             </Col>
           </Row>
         </div>

@@ -5,6 +5,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 

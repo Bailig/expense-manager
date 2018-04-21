@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Jumbotron } from 'react-bootstrap';
+import { Well } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import {
@@ -15,13 +15,13 @@ const AllAccountSummary = ({
   totalDepositAmount,
 }) => {
   return (
-    <Jumbotron>
+    <Well>
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
         <span>Total: ${totalAmount}</span>
         <span>Total Withdrawals: ${totalWithdrawalAmount}</span>
         <span>Total Deposit: ${totalDepositAmount}</span>
       </div>
-    </Jumbotron>
+    </Well>
   );
 };
 
