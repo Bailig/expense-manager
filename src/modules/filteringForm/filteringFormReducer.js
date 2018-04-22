@@ -1,7 +1,7 @@
 import { UPDATE } from './filteringFormActions';
 
 const initialState = {
-  searchKeyWord: '',
+  searchKeyword: '',
   startDate: '',
   endDate: '',
   orderedProp: '',

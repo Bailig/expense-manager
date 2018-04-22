@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { updateField as updateFieldAction } from '../../modules/filteringForm';
 
-const Header = ({ searchKeyWord, updateField }) => {
+const Header = ({ searchKeyword, updateField }) => {
   return (
     <Navbar>
       <Navbar.Header>
@@ -21,8 +21,8 @@ const Header = ({ searchKeyWord, updateField }) => {
             <FormControl
               type="text"
               placeholder="Search"
-              value={searchKeyWord}
-              onChange={event => updateField({ prop: 'searchKeyWord', value: event.target.value })}
+              value={searchKeyword}
+              onChange={event => updateField({ prop: 'searchKeyword', value: event.target.value })}
             />
           </FormGroup>
         </Navbar.Form>
@@ -41,12 +41,12 @@ const Header = ({ searchKeyWord, updateField }) => {
 };
 
 Header.propTypes = {
-  searchKeyWord: PropTypes.string.isRequired,
+  searchKeyword: PropTypes.string.isRequired,
   updateField: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = ({ filteringForm: { searchKeyWord } }) => {
-  return { searchKeyWord };
+const mapStateToProps = ({ filteringForm: { searchKeyword } }) => {
+  return { searchKeyword };
 };
 
 export default connect(mapStateToProps, { updateField: updateFieldAction })(Header);

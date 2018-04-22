@@ -1,25 +1,52 @@
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 
-import { selectTransactions } from '../transaction';
+import { selectFilteredTransactions } from '../transaction';
+import { selectFilteringProps } from '../filteringForm';
 
 
 export const selectAccounts = createSelector(
-  selectTransactions,
-  (transactions) => {
+  selectFilteredTransactions,
+  selectFilteringProps,
+  (transactions, filteringProps) => {
+    const {
+      orderedProp,
+      showBalance,
+    } = filteringProps;
     const accounts = [
       { type: 'Chequing', transactions: [] },
       { type: 'Savings', transactions: [] },
-      { type: 'Master Card', transactions: [] },
+      { type: 'Master', transactions: [] },
     ];
     if (!transactions) return accounts;
     Object.entries(transactions).forEach((idTransactionPair) => {
-      const transaction = idTransactionPair[1];
+      let transaction = { id: idTransactionPair[0], ...idTransactionPair[1] };
       accounts.forEach((account) => {
+        if (transaction.accountType !== 'Master' && !showBalance) {
+          transaction = _.omit(transaction, 'balance');
+        }
         if (account.type === transaction.accountType) {
-          accounts.transactions = [...account.transactions, transaction];
+          account.transactions.push(transaction);
         }
       });
     });
+    if (orderedProp) {
+      accounts.forEach((account) => {
+        account.transactions.sort((a, b) => {
+          if (orderedProp === 'amount') {
+            return a[orderedProp] - b[orderedProp];
+          }
+          if (a[orderedProp] < b[orderedProp]) {
+            return -1;
+          }
+          if (a[orderedProp] > b[orderedProp]) {
+            return 1;
+          }
+          return 0;
+        });
+      });
+    }
     return accounts;
   },
 );
+
