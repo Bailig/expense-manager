@@ -6,40 +6,15 @@ import PropTypes from 'prop-types';
 import { selectAccounts } from '../../modules/account';
 import { AccountSummary } from '../AccountSummary/components';
 import './AccountTabs.css';
+import { TransactionListItem } from './components';
 
 const AccountTabs = ({ accounts }) => {
-  const renderDataWithTooltips = ({ id, data, text }) => {
-    if (!data) return '';
+  const renderTransactionList = (transactions) => {
     return (
-      <OverlayTrigger placement="top" overlay={<Tooltip id={`${id}-${text}`}>{text}</Tooltip>}>
-        <span>{data}</span>
-      </OverlayTrigger>
+      <ListGroup>
+        {transactions.map(transaction => <TransactionListItem {...transaction} />)}
+      </ListGroup>
     );
-  };
-  const renderTransactions = (transactions) => {
-    return transactions.map((transaction) => {
-      return (
-        <ListGroupItem key={transaction.id}>
-          <Row>
-            <Col sm={5}>
-              {renderDataWithTooltips({ id: transaction.id, data: transaction.description, text: 'Description' })}
-            </Col>
-            <Col sm={1}>
-              {renderDataWithTooltips({ id: transaction.id, data: transaction.amount, text: 'Amount' })}
-            </Col>
-            <Col sm={2}>
-              {renderDataWithTooltips({ id: transaction.id, data: transaction.balance, text: 'Balance' })}
-            </Col>
-            <Col sm={2}>
-              {renderDataWithTooltips({ id: transaction.id, data: transaction.transactionDate, text: 'Transaction Date' })}
-            </Col>
-            <Col sm={2}>
-              {renderDataWithTooltips({ id: transaction.id, data: transaction.postingDate, text: 'Posting Date' })}
-            </Col>
-          </Row>
-        </ListGroupItem>
-      );
-    });
   };
 
   const renderTabs = () => {
@@ -47,9 +22,7 @@ const AccountTabs = ({ accounts }) => {
       return (
         <Tab key={account.type} eventKey={index} title={account.type}>
           <AccountSummary {...account} containerStyle={{ marginTop: 32 }} />
-          <ListGroup>
-            {renderTransactions(account.transactions)}
-          </ListGroup>
+          {renderTransactionList(account.transactions)}
         </Tab>
       );
     });
