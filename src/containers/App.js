@@ -17,12 +17,13 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <div className="container">
+        <div className="container" style={{ marginTop: 100 }}>
           <Row>
-            <Col md={3} >
+            <Col md={3}>
               <FilteringForm />
             </Col>
             <Col md={9}>
+              <h2 className="text-center">{'Accounts\' Summary'}</h2>
               <AllAccountSummary />
               <AccountTabs />
             </Col>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Well } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import {
@@ -8,22 +7,9 @@ import {
   selectTotalWithdrawalAmount,
   selectTotalDepositAmount,
 } from '../../modules/transaction';
+import { AccountSummary } from './components';
 
-const AllAccountSummary = ({
-  totalAmount,
-  totalWithdrawalAmount,
-  totalDepositAmount,
-}) => {
-  return (
-    <Well>
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-        <span>Total: ${totalAmount}</span>
-        <span>Total Withdrawals: ${totalWithdrawalAmount}</span>
-        <span>Total Deposit: ${totalDepositAmount}</span>
-      </div>
-    </Well>
-  );
-};
+const AllAccountSummary = props => <AccountSummary {...props} />;
 
 AllAccountSummary.propTypes = {
   totalAmount: PropTypes.number.isRequired,

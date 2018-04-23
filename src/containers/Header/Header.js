@@ -4,13 +4,14 @@ import { Navbar, Nav, NavItem, Glyphicon, FormGroup, FormControl } from 'react-b
 import PropTypes from 'prop-types';
 
 import { updateField as updateFieldAction } from '../../modules/filteringForm';
+import './Header.css';
 
 const Header = ({ searchKeyword, updateField }) => {
   return (
-    <Navbar>
+    <Navbar fixedTop>
       <Navbar.Header>
         <Navbar.Brand>
-          <a href="#home"><Glyphicon glyph="piggy-bank" /></a>
+          <a href="#home"><Glyphicon glyph="globe" /></a>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>

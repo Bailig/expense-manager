@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Checkbox } from 'react-bootstrap';
 
 import { updateField as updateFieldAction } from '../../modules/filteringForm';
-import { FieldGroup } from '../component';
+import { FieldGroup } from '../components';
 
 const FilteringForm = ({
   startDate,

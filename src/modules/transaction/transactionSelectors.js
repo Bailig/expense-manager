@@ -52,44 +52,69 @@ export const selectFilteredTransactions = createSelector(
   },
 );
 
+// export const calculateTotalAmountOfTransactions = (transactions) => {
+//   if (!transactions) return 0;
+//   let totalAmount = 0;
+//   let transactionArray = [];
+//   if (_.isObject(transactions)) {
+//     transactionArray = Object.entries(transactions)
+//       .map(idTransactionPair => ({ ...idTransactionPair[1], id: idTransactionPair[0] }));
+//   }
+//   if (_.isArray(transactions)) {
+//     transactionArray = transactions;
+//   }
+//   transactionArray
+//     .filter(transaction => !Number.isNaN(Number.parseFloat(transaction.amount)))
+//     .forEach((transaction) => {
+//       totalAmount += transaction.amount;
+//     });
+//   return Math.round(totalAmount * 100) / 100;
+// };
+export const calculateTotalAmountOfTransactions = (transactions) => {
+  if (!transactions) return 0;
+  let totalAmount = 0;
+  Object.entries(transactions)
+    .filter(idTransactionPair => !Number.isNaN(Number.parseFloat(idTransactionPair[1].amount)))
+    .forEach((idTransactionPair) => {
+      totalAmount += idTransactionPair[1].amount;
+    });
+  return Math.round(totalAmount * 100) / 100;
+};
+
 export const selectTotalAmount = createSelector(
   selectFilteredTransactions,
-  (transactions) => {
-    if (!transactions) return 0;
-    let totalAmount = 0;
-    Object.entries(transactions)
-      .filter(idTransactionPair => !Number.isNaN(Number.parseFloat(idTransactionPair[1].amount)))
-      .forEach((idTransactionPair) => {
-        totalAmount += idTransactionPair[1].amount;
-      });
-    return Math.round(totalAmount * 100) / 100;
-  },
+  calculateTotalAmountOfTransactions,
 );
+
+export const calculateTotalWithdrawalAmountOfTransactions = (transactions) => {
+  if (!transactions) return 0;
+  let totalAmount = 0;
+  Object.entries(transactions)
+    .filter(idTransactionPair => idTransactionPair[1].amount < 0)
+    .forEach((idTransactionPair) => {
+      totalAmount += idTransactionPair[1].amount;
+    });
+  return Math.round(totalAmount * 100) / 100;
+};
+
 
 export const selectTotalWithdrawalAmount = createSelector(
   selectFilteredTransactions,
-  (transactions) => {
-    if (!transactions) return 0;
-    let totalAmount = 0;
-    Object.entries(transactions)
-      .filter(idTransactionPair => idTransactionPair[1].amount < 0)
-      .forEach((idTransactionPair) => {
-        totalAmount += idTransactionPair[1].amount;
-      });
-    return Math.round(totalAmount * 100) / 100;
-  },
+  calculateTotalWithdrawalAmountOfTransactions,
 );
+
+export const calculateTotalDepositAmountOfTransactions = (transactions) => {
+  if (!transactions) return 0;
+  let totalAmount = 0;
+  Object.entries(transactions)
+    .filter(idTransactionPair => idTransactionPair[1].amount > 0)
+    .forEach((idTransactionPair) => {
+      totalAmount += idTransactionPair[1].amount;
+    });
+  return Math.round(totalAmount * 100) / 100;
+};
 
 export const selectTotalDepositAmount = createSelector(
   selectFilteredTransactions,
-  (transactions) => {
-    if (!transactions) return 0;
-    let totalAmount = 0;
-    Object.entries(transactions)
-      .filter(idTransactionPair => idTransactionPair[1].amount > 0)
-      .forEach((idTransactionPair) => {
-        totalAmount += idTransactionPair[1].amount;
-      });
-    return Math.round(totalAmount * 100) / 100;
-  },
+  calculateTotalDepositAmountOfTransactions,
 );

@@ -1,0 +1,40 @@
+
+.navbar {
+  min-height: 80px;
+}
+
+.navbar-default {
+  background-image: none;
+  background-color: white;
+}
+
+.navbar > .container {
+  margin-top: 7px;
+}
+
+.navbar-nav > li > a {
+  /* added 14px */
+  line-height: 34px; 
+}
+
+.navbar-brand {
+  /* added 14px */
+  font-size: 32px;
+  height: 64px;
+}
+
+.navbar .form-control {
+  height: 48px;
+}
+
+.navbar-toggle {
+  border-radius: 0px;
+  /* added 7px */
+  margin-top: 15px;
+}
+
+@media (min-width: 768px) {
+  .navbar .form-control {
+    width: 400px;
+  }
+}
