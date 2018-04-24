@@ -9,22 +9,38 @@ import {
 } from '../transaction';
 import { selectFilteringProps } from '../filteringForm';
 
+const selectAccount = state => state.account;
+
+const handleShowingBalance = ({ transaction, showBalance }) => {
+  if (showBalance || transaction.accountType === 'Master') {
+    return transaction;
+  }
+  return _.omit(transaction, 'balance');
+};
+
+const handleGroupingTransactionsByCountPerPage = ({
+  transactions,
+  count = 20,
+}) => {
+  const groupedTransactions = [];
+  let i;
+  let j;
+  for (i = 0, j = transactions.length; i < j; i += count) {
+    groupedTransactions.push(transactions.slice(i, i + count));
+  }
+  return groupedTransactions;
+};
+
 export const handleAssigningTransactionsAndShowingBalance = ({
   transactions = [],
-  accounts = [
-    { type: 'Chequing', transactions: [] },
-    { type: 'Savings', transactions: [] },
-    { type: 'Master', transactions: [] },
-  ],
+  accounts,
   showBalance = true,
 }) => {
   if (!transactions) return accounts;
   Object.entries(transactions).forEach((idTransactionPair) => {
     let transaction = { id: idTransactionPair[0], ...idTransactionPair[1] };
     accounts.forEach((account) => {
-      if (transaction.accountType !== 'Master' && !showBalance) {
-        transaction = _.omit(transaction, 'balance');
-      }
+      transaction = handleShowingBalance({ transaction, showBalance });
       if (account.type === transaction.accountType) {
         account.transactions.push(transaction);
       }
@@ -33,7 +49,7 @@ export const handleAssigningTransactionsAndShowingBalance = ({
   return accounts;
 };
 
-export const handleOrderingTransactionsAndCalculatingSummary = ({ accounts, orderedProp }) => {
+export const handleOrderingGroupingTransactionsAndCalculatingSummary = ({ accounts, orderedProp }) => {
   accounts.forEach((account) => {
     account.totalAmount = calculateTotalAmountOfTransactions(account.transactions);
 
@@ -55,22 +71,21 @@ export const handleOrderingTransactionsAndCalculatingSummary = ({ accounts, orde
         return 0;
       });
     }
+    account.transactions = handleGroupingTransactionsByCountPerPage({ transactions: account.transactions });
+    account.getLastPageNumber = () => (account.transactions.length + 1);
   });
   return accounts;
 };
 
 export const selectAccounts = createSelector(
+  selectAccount,
   selectFilteredTransactions,
   selectFilteringProps,
-  (transactions, filteringProps) => {
-    const {
-      orderedProp,
-      showBalance,
-    } = filteringProps;
-
+  (account, transactions, filteringProps) => {
     let accounts = [
       {
         type: 'Chequing',
+        currentPageNumber: account.accounts[0].currentPageNumber,
         totalAmount: 0,
         totalDepositAmount: 0,
         totalWithdrawalAmount: 0,
@@ -78,6 +93,7 @@ export const selectAccounts = createSelector(
       },
       {
         type: 'Savings',
+        currentPageNumber: account.accounts[1].currentPageNumber,
         totalAmount: 0,
         totalDepositAmount: 0,
         totalWithdrawalAmount: 0,
@@ -85,6 +101,7 @@ export const selectAccounts = createSelector(
       },
       {
         type: 'Master',
+        currentPageNumber: account.accounts[2].currentPageNumber,
         totalAmount: 0,
         totalDepositAmount: 0,
         totalWithdrawalAmount: 0,
@@ -92,11 +109,17 @@ export const selectAccounts = createSelector(
       },
     ];
 
+    const {
+      orderedProp,
+      showBalance,
+    } = filteringProps;
+
+    // TODO: add pagination
     accounts = handleAssigningTransactionsAndShowingBalance({
       transactions, accounts, showBalance,
     });
 
-    accounts = handleOrderingTransactionsAndCalculatingSummary({ accounts, orderedProp });
+    accounts = handleOrderingGroupingTransactionsAndCalculatingSummary({ accounts, orderedProp });
     return accounts;
   },
 );
