@@ -84,24 +84,21 @@ export const selectAccounts = createSelector(
   (account, transactions, filteringProps) => {
     let accounts = [
       {
-        type: 'Chequing',
-        currentPageNumber: account.accounts[0].currentPageNumber,
+        ...account.accounts[0],
         totalAmount: 0,
         totalDepositAmount: 0,
         totalWithdrawalAmount: 0,
         transactions: [],
       },
       {
-        type: 'Savings',
-        currentPageNumber: account.accounts[1].currentPageNumber,
+        ...account.accounts[1],
         totalAmount: 0,
         totalDepositAmount: 0,
         totalWithdrawalAmount: 0,
         transactions: [],
       },
       {
-        type: 'Master',
-        currentPageNumber: account.accounts[2].currentPageNumber,
+        ...account.accounts[2],
         totalAmount: 0,
         totalDepositAmount: 0,
         totalWithdrawalAmount: 0,
@@ -114,7 +111,6 @@ export const selectAccounts = createSelector(
       showBalance,
     } = filteringProps;
 
-    // TODO: add pagination
     accounts = handleAssigningTransactionsAndShowingBalance({
       transactions, accounts, showBalance,
     });
