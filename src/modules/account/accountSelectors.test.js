@@ -123,8 +123,10 @@ describe('account selectors', () => {
           }],
         },
       ];
-      // expect(accounts).toEqual(result);
-      expect(uut.handleOrderingTransactionsAndCalculatingSummary({ accounts, orderedProp: state.filteringForm.orderedProp })).toEqual(result);
+      expect(uut.handleOrderingTransactionsAndCalculatingSummary({
+        accounts,
+        orderedProp: state.filteringForm.orderedProp,
+      })).toEqual(result);
     });
   });
 });

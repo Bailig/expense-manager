@@ -4,7 +4,7 @@ const initialState = {
   searchKeyword: '',
   startDate: '',
   endDate: '',
-  orderedProp: '',
+  orderedProp: 'transactionDate',
   showDeposit: true,
   showWithdrawal: true,
   showBalance: true,

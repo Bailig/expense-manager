@@ -40,6 +40,6 @@ TransactionListItem.propTypes = {
   description: PropTypes.string.isRequired,
   amount: PropTypes.number.isRequired,
   balance: PropTypes.number,
-  transactionDate: PropTypes.number.isRequired,
+  transactionDate: PropTypes.string.isRequired,
   postingDate: PropTypes.string,
 };

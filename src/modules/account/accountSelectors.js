@@ -9,6 +9,8 @@ import {
 } from '../transaction';
 import { selectFilteringProps } from '../filteringForm';
 
+const selectAccount = state => state.account;
+
 export const handleAssigningTransactionsAndShowingBalance = ({
   transactions = [],
   accounts = [
@@ -33,7 +35,17 @@ export const handleAssigningTransactionsAndShowingBalance = ({
   return accounts;
 };
 
-export const handleOrderingTransactionsAndCalculatingSummary = ({ accounts, orderedProp }) => {
+const groupTransactions = ({ transactions, transactionCount }) => {
+  const groupedTransactions = [];
+  let i;
+  let j;
+  for (i = 0, j = transactions.length; i < j; i += transactionCount) {
+    groupedTransactions.push(transactions.slice(i, i + transactionCount));
+  }
+  return groupedTransactions;
+};
+
+export const handleOrderingGroupingAndCalculatingSummary = ({ accounts, orderedProp, transactionCount }) => {
   accounts.forEach((account) => {
     account.totalAmount = calculateTotalAmountOfTransactions(account.transactions);
 
@@ -55,6 +67,11 @@ export const handleOrderingTransactionsAndCalculatingSummary = ({ accounts, orde
         return 0;
       });
     }
+    account.transactions = groupTransactions({ transactions: account.transactions, transactionCount });
+    account.pageCount = account.transactions.length;
+    if (account.currentPageIndex > account.pageCount) {
+      account.currentPageIndex = 0;
+    }
   });
   return accounts;
 };
@@ -62,7 +79,8 @@ export const handleOrderingTransactionsAndCalculatingSummary = ({ accounts, orde
 export const selectAccounts = createSelector(
   selectFilteredTransactions,
   selectFilteringProps,
-  (transactions, filteringProps) => {
+  selectAccount,
+  (transactions, filteringProps, account) => {
     const {
       orderedProp,
       showBalance,
@@ -70,6 +88,7 @@ export const selectAccounts = createSelector(
 
     let accounts = [
       {
+        ...account[0],
         type: 'Chequing',
         totalAmount: 0,
         totalDepositAmount: 0,
@@ -77,6 +96,7 @@ export const selectAccounts = createSelector(
         transactions: [],
       },
       {
+        ...account[1],
         type: 'Savings',
         totalAmount: 0,
         totalDepositAmount: 0,
@@ -84,6 +104,7 @@ export const selectAccounts = createSelector(
         transactions: [],
       },
       {
+        ...account[2],
         type: 'Master',
         totalAmount: 0,
         totalDepositAmount: 0,
@@ -91,12 +112,11 @@ export const selectAccounts = createSelector(
         transactions: [],
       },
     ];
-
     accounts = handleAssigningTransactionsAndShowingBalance({
       transactions, accounts, showBalance,
     });
-
-    accounts = handleOrderingTransactionsAndCalculatingSummary({ accounts, orderedProp });
+    const { transactionCount } = account;
+    accounts = handleOrderingGroupingAndCalculatingSummary({ accounts, orderedProp, transactionCount });
     return accounts;
   },
 );
